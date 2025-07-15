@@ -173,7 +173,7 @@ if ($OutFile -ne "") {
   Write-Host "[*] Looking for scheduled tasks."
   $st = Get-ScheduledTask | Where-Object {$_.State -eq "Ready"} | Select-Object TaskName,Author, @{Name='RunAsUser'; Expression={$_.Principal.UserId}}
   $st | Write-Host
-  Write-OutFile -Data $st -OutFile $Outf -Header "Scheduled Tasks"
+  Write-OutFile -Data $($st -join "`r`n") -OutFile $Outf -Header "Scheduled Tasks"
   Write-Host ""
 
   # Installed packages
@@ -182,8 +182,8 @@ if ($OutFile -ne "") {
   $in2 = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*" | Select-Object displayname | out-string -stream | where-object {$_.trim() -ne ""}
   $in1 | Write-Host
   $in2 | Write-Host
-  Write-OutFile -Data $in1 -OutFile $Outf -Header "Installed Packages"
-  Write-OutFile -Data $in2 -OutFile $Outf
+  Write-OutFile -Data $($in1 -join "`r`n") -OutFile $Outf -Header "Installed Packages"
+  Write-OutFile -Data $($in2 -join "`r`n") -OutFile $Outf
   Write-Host ""
 
 
