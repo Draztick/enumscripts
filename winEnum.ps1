@@ -171,7 +171,7 @@ if ($OutFile -ne "") {
 
   # Scheduled Tasks
   Write-Host "[*] Looking for scheduled tasks."
-  $st = Get-ScheduledTask | Where-Object {$_.State -eq "Ready"} | Select-Object TaskName,Author,@{Name='RunAsUser'; Expression={$_.Principal.UserId}} | Out-String -Stream
+  $st = Get-ScheduledTask | Where-Object {$_.State -eq "Ready" -and $_.Author -notmatch "Microsoft" -and $_.Author -notmatch "Mozilla"} | Select-Object TaskName,Author,@{Name='RunAsUser'; Expression={$_.Principal.UserId}} | Out-String -Stream
   $($st -join "`r`n") | Write-Host
   Write-OutFile -Data $($st -join "`r`n") -OutFile $Outf -Header "Scheduled Tasks"
   Write-Host ""
