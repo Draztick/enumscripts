@@ -171,15 +171,15 @@ if ($OutFile -ne "") {
 
   # Scheduled Tasks
   Write-Host "[*] Looking for scheduled tasks."
-  $st = Get-ScheduledTask | Where-Object {$_.State -eq "Ready"} | Select-Object TaskName,Author, @{Name='RunAsUser'; Expression={$_.Principal.UserId}}
+  $st = Get-ScheduledTask | Where-Object {$_.State -eq "Ready"} | Select-Object TaskName,Author, @{Name='RunAsUser'; Expression={$_.Principal.UserId}} | Out-String
   $st | Write-Host
   Write-OutFile -Data $($st -join "`r`n") -OutFile $Outf -Header "Scheduled Tasks"
   Write-Host ""
 
   # Installed packages
   Write-Host "[*] Gathering installed packages through Registry."
-  $in1 = Get-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*" | Select-Object DisplayName | out-string -stream | where-object {$_.trim() -ne ""}
-  $in2 = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*" | Select-Object displayname | out-string -stream | where-object {$_.trim() -ne ""}
+  $in1 = Get-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*" | Select-Object DisplayName | out-string -stream | where-object {$_.trim() -ne ""} | Out-String
+  $in2 = Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*" | Select-Object displayname | out-string -stream | where-object {$_.trim() -ne ""} | Out-String
   $in1 | Write-Host
   $in2 | Write-Host
   Write-OutFile -Data $($in1 -join "`r`n") -OutFile $Outf -Header "Installed Packages"
