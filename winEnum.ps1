@@ -124,7 +124,7 @@ if ($OutFile -ne "") {
   $a = $hostname + '\' + $username
   $users = Get-LocalUser | select-object -Property name | Out-String
   $group = get-localgroup | select-object -property name | out-string
-  $mygroups = Get-LocalGroup | Where-Object { (Get-LocalGroupMember -Name $_.Name | Select-Object -ExpandProperty Name) -contains "$a" } | Out-String
+  $mygroups = $(whoami /groups) -join "`r`n"
 
   Write-Host "Username: $username"
   Write-Outfile -Data "$username" -OutFile $Outf -Header "Username"
