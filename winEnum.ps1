@@ -125,8 +125,15 @@ if ($OutFile -ne "") {
   $users = Get-LocalUser | select-object -Property name | Out-String
   $group = get-localgroup | select-object -property name | out-string
   $mygroups = $(whoami /groups) -join "`r`n"
+  $sys = $(systeminfo) -join "`r`n" #implement
+  $ips = $(ipconfig /all) -join "`r`n" #implement
+  $route = $(route print) -join "`r`n"#implement
+  $conn = $(netstat -nao) -join "`r`n"#implement
+  $process = Get-Process #implement
+
 
   Write-Host "Username: $username"
+  Write-Host "Hostname: $hostname"
   Write-Outfile -Data "$username" -OutFile $Outf -Header "Username"
   Write-Host "Users:"
   $users | Write-Host
